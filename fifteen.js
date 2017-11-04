@@ -27,6 +27,16 @@ $(document).ready(function(){
 			x = parseInt($("#puzzlearea").css("top")); 
 		}
 
+		// Check if tiles are near blank tile
+		var check = function(piece){
+			if(((parseInt($(piece).css("top")) - bkY == 100 || parseInt($(piece).css("top")) - bkY == -100) && parseInt($(piece).css("left")) - bkX == 0) || ((parseInt($(piece).css("left")) - bkX == 100 || parseInt($(piece).css("left")) - bkX == -100) && parseInt($(piece).css("top")) - bkY == 0)){
+					return true;
+				}
+			else{ 
+				return false; 
+			}
+		};
+
 		// Tile glows when mouse hovers
 		$(tiles[i]).on("mouseover", function(){
 			if(check(this)){ 
@@ -39,6 +49,30 @@ $(document).ready(function(){
 			$(this).removeClass("movablepiece");
 		});
 
+		// Switch Tiles
+		var switchTile = function(move){
+			var tempX = bkX;
+			var tempY = bkY;
+
+			bkY = parseInt($(move).css("top"));
+			bkX = parseInt($(move).css("left"));
+
+	        $(move).css("top", tempY);
+			$(move).css("left", tempX);
+		};
+
+		 // Check that tile is beside the blank before switching
+		var moveTile = function(){
+			var lst = []; 
+			for(var i=0; i < tiles.length; i++){
+				if (check(tiles[i]) == true){
+					lst.push(tiles[i]);
+				}
+			}
+			var move = lst[Math.floor(Math.random() * lst.length)];
+			switchTile(move);
+		};
+
 		// Tile switched with blank when clicked
 		$(tiles[i]).on("click", function(){
 			if(check(this)){ 
@@ -46,40 +80,6 @@ $(document).ready(function(){
 			}
 		});
 	}
-
-	// Check if tiles are near blank tile
-	var check = function(piece){
-		if(((parseInt($(piece).css("top")) - bkY == 100 || parseInt($(piece).css("top")) - bkY == -100) && parseInt($(piece).css("left")) - bkX == 0) || ((parseInt($(piece).css("left")) - bkX == 100 || parseInt($(piece).css("left")) - bkX == -100) && parseInt($(piece).css("top")) - bkY == 0)){
-				return true;
-			}
-		else{ 
-			return false; 
-		}
-	};
-
-	// Switch Tiles
-	var switchTile = function(move){
-		var tempX = bkX;
-		var tempY = bkY;
-
-		bkY = parseInt($(move).css("top"));
-		bkX = parseInt($(move).css("left"));
-
-        $(move).css("top", tempY);
-		$(move).css("left", tempX);
-	};
-
-    // Check that tile is beside the blank before switching
-	var moveTile = function(){
-		var lst = []; 
-		for(var i=0; i < tiles.length; i++){
-			if (check(tiles[i]) == true){
-				lst.push(tiles[i]);
-			}
-		}
-		var move = lst[Math.floor(Math.random() * lst.length)];
-		switchTile(move);
-	};
 
 	$("#shufflebutton").on("click", function(){
 		times = Math.floor(Math.random() * 100) + 100;
